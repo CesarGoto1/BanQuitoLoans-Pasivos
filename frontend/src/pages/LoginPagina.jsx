@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/pasivosApi.js';
-import { saveSession } from '../utils/sesion.js';
+import { saveSession } from '../services/sesion.js';
 
 export default function LoginPagina() {
   const [identificationNumber, setIdentificationNumber] = useState('');

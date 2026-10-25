@@ -1,5 +1,5 @@
 import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
-import { clearSession, getSession } from '../utils/sesion.js';
+import { clearSession, getSession } from '../services/sesion.js';
 
 export default function MenuPagina() {
   const navigate = useNavigate();

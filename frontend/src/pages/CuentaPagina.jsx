@@ -1,9 +1,25 @@
 import { useEffect, useState } from 'react';
 import { getAccounts, getMovements } from '../services/pasivosApi.js';
-import { formatCurrency, formatDate } from '../utils/formatos.js';
-import { getSession } from '../utils/sesion.js';
+import { getSession } from '../services/sesion.js';
 
 const PAGE_SIZE = 10;
+
+const currencyFormatter = new Intl.NumberFormat('es-EC', {
+  style: 'currency',
+  currency: 'USD',
+});
+
+function formatCurrency(value) {
+  return currencyFormatter.format(value);
+}
+
+function formatDate(value) {
+  if (!value) {
+    return '';
+  }
+  const [year, month, day] = value.substring(0, 10).split('-');
+  return `${day}/${month}/${year}`;
+}
 
 const STATUS_CLASS = {
   ACTIVA: 'bq-estado-exito',
@@ -49,6 +65,10 @@ export default function CuentaPagina() {
   }
 
   const account = accounts.find((item) => item.accountNumber === selectedNumber);
+
+  const pageInfo = movements ? movements.page ?? movements : null;
+  const currentPage = pageInfo?.number ?? page;
+  const totalPages = pageInfo?.totalPages ?? 1;
 
   return (
     <main className="bq-pagina">
@@ -162,12 +182,12 @@ export default function CuentaPagina() {
           </div>
           <div className="bq-acciones">
             <span className="bq-texto-2">
-              Página {movements.number + 1} de {movements.totalPages}
+              Página {currentPage + 1} de {totalPages}
             </span>
             <button
               type="button"
               className="bq-btn bq-btn-secundario bq-btn-sm"
-              disabled={movements.first}
+              disabled={currentPage <= 0}
               onClick={() => setPage(page - 1)}
             >
               Anterior
@@ -175,7 +195,7 @@ export default function CuentaPagina() {
             <button
               type="button"
               className="bq-btn bq-btn-secundario bq-btn-sm"
-              disabled={movements.last}
+              disabled={currentPage + 1 >= totalPages}
               onClick={() => setPage(page + 1)}
             >
               Siguiente
