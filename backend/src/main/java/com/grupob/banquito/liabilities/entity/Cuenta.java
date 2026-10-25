@@ -2,7 +2,6 @@ package com.grupob.banquito.liabilities.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -18,15 +17,9 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "cuentas")
-@EntityListeners(AuditingEntityListener.class)
 public class Cuenta {
 
     @Id
@@ -63,27 +56,27 @@ public class Cuenta {
     @NotNull
     private EstadoCuenta status;
 
-    @CreatedBy
     @Column(name = "usuarioCreacion")
     @NotNull
     @Size(max = 50)
     private String createdBy;
 
-    @CreatedDate
     @Column(name = "fechaCreacion")
     @NotNull
     private LocalDateTime createdDate;
 
-    @LastModifiedBy
     @Column(name = "usuarioModificacion")
     @Size(max = 50)
     private String lastModifiedBy;
 
-    @LastModifiedDate
     @Column(name = "fechaModificacion")
     private LocalDateTime lastModifiedDate;
 
-    protected Cuenta() {
+    public Cuenta() {
+    }
+
+    public Cuenta(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -94,39 +87,79 @@ public class Cuenta {
         return customer;
     }
 
+    public void setCustomer(Cliente customer) {
+        this.customer = customer;
+    }
+
     public String getAccountNumber() {
         return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public BigDecimal getBalance() {
         return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     public LocalDate getOpeningDate() {
         return openingDate;
     }
 
+    public void setOpeningDate(LocalDate openingDate) {
+        this.openingDate = openingDate;
+    }
+
     public EstadoCuenta getStatus() {
         return status;
+    }
+
+    public void setStatus(EstadoCuenta status) {
+        this.status = status;
     }
 
     public String getCreatedBy() {
         return createdBy;
     }
 
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public LocalDateTime getCreatedDate() {
         return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getLastModifiedBy() {
         return lastModifiedBy;
     }
 
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
     public LocalDateTime getLastModifiedDate() {
         return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }
