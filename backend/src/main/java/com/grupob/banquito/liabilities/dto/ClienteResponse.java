@@ -5,6 +5,7 @@ import com.grupob.banquito.liabilities.entity.EstadoCliente;
 import java.time.LocalDate;
 
 public record ClienteResponse(
+        Integer customerId,
         String identificationNumber,
         String firstNames,
         String lastNames,
@@ -17,6 +18,7 @@ public record ClienteResponse(
 
     public static ClienteResponse from(Cliente customer) {
         return new ClienteResponse(
+                customer.getId(),
                 customer.getIdentificationNumber(),
                 customer.getFirstNames(),
                 customer.getLastNames(),

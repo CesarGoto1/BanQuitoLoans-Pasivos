@@ -2,7 +2,6 @@ package com.grupob.banquito.liabilities.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -13,15 +12,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "clientes")
-@EntityListeners(AuditingEntityListener.class)
 public class Cliente {
 
     @Id
@@ -72,27 +65,27 @@ public class Cliente {
     @NotNull
     private EstadoCliente status;
 
-    @CreatedBy
     @Column(name = "usuarioCreacion")
     @NotNull
     @Size(max = 50)
     private String createdBy;
 
-    @CreatedDate
     @Column(name = "fechaCreacion")
     @NotNull
     private LocalDateTime createdDate;
 
-    @LastModifiedBy
     @Column(name = "usuarioModificacion")
     @Size(max = 50)
     private String lastModifiedBy;
 
-    @LastModifiedDate
     @Column(name = "fechaModificacion")
     private LocalDateTime lastModifiedDate;
 
-    protected Cliente() {
+    public Cliente() {
+    }
+
+    public Cliente(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -103,51 +96,103 @@ public class Cliente {
         return identificationNumber;
     }
 
+    public void setIdentificationNumber(String identificationNumber) {
+        this.identificationNumber = identificationNumber;
+    }
+
     public String getFirstNames() {
         return firstNames;
+    }
+
+    public void setFirstNames(String firstNames) {
+        this.firstNames = firstNames;
     }
 
     public String getLastNames() {
         return lastNames;
     }
 
+    public void setLastNames(String lastNames) {
+        this.lastNames = lastNames;
+    }
+
     public LocalDate getBirthDate() {
         return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     public String getAddress() {
         return address;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getCity() {
         return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getPhone() {
         return phone;
     }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public EstadoCliente getStatus() {
         return status;
     }
 
+    public void setStatus(EstadoCliente status) {
+        this.status = status;
+    }
+
     public String getCreatedBy() {
         return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     public String getLastModifiedBy() {
         return lastModifiedBy;
     }
 
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
     public LocalDateTime getLastModifiedDate() {
         return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

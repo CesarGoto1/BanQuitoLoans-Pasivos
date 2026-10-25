@@ -4,6 +4,7 @@ import com.grupob.banquito.liabilities.entity.Cliente;
 import com.grupob.banquito.liabilities.entity.EstadoCliente;
 
 public record InicioSesionResponse(
+        Integer customerId,
         String identificationNumber,
         String firstNames,
         String lastNames,
@@ -11,6 +12,7 @@ public record InicioSesionResponse(
 
     public static InicioSesionResponse from(Cliente customer) {
         return new InicioSesionResponse(
+                customer.getId(),
                 customer.getIdentificationNumber(),
                 customer.getFirstNames(),
                 customer.getLastNames(),

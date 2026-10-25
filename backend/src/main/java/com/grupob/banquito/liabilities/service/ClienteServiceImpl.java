@@ -23,4 +23,11 @@ public class ClienteServiceImpl implements ClienteService {
                 .map(ClienteResponse::from)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado."));
     }
+
+    @Override
+    public ClienteResponse findById(Integer customerId) {
+        return clienteRepository.findById(customerId)
+                .map(ClienteResponse::from)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado."));
+    }
 }
