@@ -15,7 +15,7 @@
     <artifactId>BanQuitoLiabilities</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>BanQuitoLiabilities</name>
-    <description>BanQuito simulated Liabilities Core (customers, accounts, transactions)</description>
+    <description>Core de pasivos simulado BanQuito (clientes, cuentas y movimientos)</description>
 
     <properties>
         <java.version>25</java.version>
