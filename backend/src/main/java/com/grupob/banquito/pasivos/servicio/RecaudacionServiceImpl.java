@@ -76,7 +76,7 @@ public class RecaudacionServiceImpl implements RecaudacionService {
         String detailText = detalles.toString();
         String hash = sha256(detailText);
         String header = String.join(",", "H", idArchivo, fechaProceso.toString(),
-                DATE_TIME.format(LocalDateTime.now()), Integer.toString(movimientos.size()), money(total));
+                DATE_TIME.format(LocalDateTime.now().withNano(0)), Integer.toString(movimientos.size()), money(total));
         String footer = String.join(",", "T", Integer.toString(movimientos.size()), money(total), hash);
         String content = header + (detailText.isEmpty() ? "" : "\n" + detailText) + "\n" + footer + "\n";
         byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
