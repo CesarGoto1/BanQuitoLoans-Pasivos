@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.HexFormat;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,11 @@ import org.springframework.beans.factory.annotation.Value;
 public class RecaudacionServiceImpl implements RecaudacionService {
 
     private static final String COLLECTION = "COBRO_CUOTA";
-    private static final String[] CHANNELS = {"VEN", "WEB", "DEB", "TRF"};
+    private static final Map<String, String> CHANNEL_CODES = Map.of(
+            "VENTANILLA", "VEN",
+            "BANCA_WEB", "WEB",
+            "DEBITO_AUTOMATICO", "DEB",
+            "TRANSFERENCIA", "TRF");
     private static final DateTimeFormatter FILE_DATE = DateTimeFormatter.BASIC_ISO_DATE;
     private static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     private final MovimientoRepository movimientoRepository;
@@ -53,14 +58,15 @@ public class RecaudacionServiceImpl implements RecaudacionService {
                         + " no tiene operación o cliente titular.");
             }
             String canal = movimiento.getCanal();
-            if (canal == null || !List.of(CHANNELS).contains(canal)) {
+            String codigoCanal = CHANNEL_CODES.get(canal);
+            if (codigoCanal == null) {
                 throw new IllegalStateException("El cobro " + movimiento.getIdMovimiento() + " tiene un canal inválido.");
             }
             String detalle = String.join(",",
                     "D", Integer.toString(secuencial++), movimiento.getUuidTransaccion().toString(),
                     csv(movimiento.getNumeroOperacion()), movimiento.getCuenta().getCliente().getCedulaCliente(),
                     money(movimiento.getMontoMovimiento()), DATE_TIME.format(movimiento.getFechaHoraMovimiento()),
-                    canal, csv(movimiento.getReferencia()));
+                    codigoCanal, csv(movimiento.getReferencia()));
             if (detalles.length() > 0) {
                 detalles.append('\n');
             }
