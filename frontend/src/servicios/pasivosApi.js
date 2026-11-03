@@ -32,8 +32,8 @@ export function iniciarSesion(cedulaCliente) {
   });
 }
 
-export function obtenerCuentas(cedulaCliente) {
-  return solicitar(`/api/clientes/${encodeURIComponent(cedulaCliente)}/cuentas`);
+export function obtenerCuentas(cedulaCliente, pagina = 0, tamano = 20) {
+  return solicitar(`/api/clientes/${encodeURIComponent(cedulaCliente)}/cuentas?page=${pagina}&size=${tamano}`);
 }
 
 export function obtenerMovimientos(numeroCuenta, pagina = 0, tamano = 10) {
