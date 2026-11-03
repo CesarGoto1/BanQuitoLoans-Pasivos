@@ -39,9 +39,10 @@ export default function CuentaPagina() {
   useEffect(() => {
     obtenerCuentas(cedulaCliente)
       .then((datos) => {
-        establecerCuentas(datos);
-        if (datos.length > 0) {
-          establecerNumeroSeleccionado(datos[0].numeroCuenta);
+        const lista = datos.content ?? [];
+        establecerCuentas(lista);
+        if (lista.length > 0) {
+          establecerNumeroSeleccionado(lista[0].numeroCuenta);
         }
       })
       .catch((excepcion) => establecerError(excepcion.message))

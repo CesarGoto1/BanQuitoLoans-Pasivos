@@ -25,7 +25,7 @@ test('API conserva rutas, datos de inicio de sesion, paginacion y errores', asyn
     assert.deepEqual(JSON.parse(llamadas[0][1].body), { cedulaCliente: '1712345678' });
     assert.equal(llamadas[0][1].method, 'POST');
     await api.obtenerCuentas('1712345678');
-    assert.equal(llamadas[1][0], 'http://localhost:8081/api/clientes/1712345678/cuentas');
+    assert.equal(llamadas[1][0], 'http://localhost:8081/api/clientes/1712345678/cuentas?page=0&size=20');
     await api.obtenerMovimientos('001/002', 2, 5);
     assert.equal(llamadas[2][0], 'http://localhost:8081/api/cuentas/001%2F002/movimientos?page=2&size=5');
     await api.obtenerMovimientos('001');
