@@ -47,9 +47,6 @@ export default function MenuPagina() {
         <NavLink to="/banca/mi-cuenta" className="bq-menu-item">
           Mi cuenta
         </NavLink>
-        <NavLink to="/banca/archivo-recaudacion" className="bq-menu-item">
-          Archivo de recaudación
-        </NavLink>
         <a href={urlGestionPrestamos(cliente)} className="bq-menu-item">
           Gestión de préstamos
         </a>
