@@ -1,0 +1,27 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: banquito-pasivos-monolito
+    url: http://host.docker.internal:8081
+    routes:
+      - name: consultar-saldos
+        paths:
+          - /api/clientes
+        methods:
+          - GET
+        strip_path: false
+
+      - name: debitar-cuenta
+        paths:
+          - /api/pasivos/debitos
+        methods:
+          - POST
+        strip_path: false
+
+      - name: acreditar-desembolso
+        paths:
+          - /api/desembolsos
+        methods:
+          - POST
+        strip_path: false
