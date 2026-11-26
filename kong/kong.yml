@@ -5,11 +5,18 @@ services:
   - name: banquito-pasivos-monolito
     url: http://host.docker.internal:8081
     routes:
-      - name: consultar-saldos
+      - name: consultar-clientes
         paths:
           - /api/clientes
         methods:
           - GET
+        strip_path: false
+
+      - name: acreditar-desembolso
+        paths:
+          - /api/desembolsos
+        methods:
+          - POST
         strip_path: false
 
       - name: debitar-cuenta
@@ -19,9 +26,23 @@ services:
           - POST
         strip_path: false
 
-      - name: acreditar-desembolso
+      - name: descargar-archivo-recaudacion
         paths:
-          - /api/desembolsos
+          - /api/recaudaciones/archivo
         methods:
-          - POST
+          - GET
         strip_path: false
+
+    plugins:
+      - name: key-auth
+        config:
+          key_names:
+            - apikey
+          key_in_header: true
+          key_in_query: true
+          hide_credentials: true
+
+consumers:
+  - username: core-activos
+    keyauth_credentials:
+      - key: bq-activos-c324637f4be7cdd68700dfbf

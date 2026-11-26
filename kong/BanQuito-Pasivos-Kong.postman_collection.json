@@ -1,0 +1,479 @@
+{
+  "info": {
+    "name": "BanQuito Pasivos por Kong",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "kong",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "backend",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "apikey",
+      "value": "bq-activos-c324637f4be7cdd68700dfbf"
+    },
+    {
+      "key": "cedula",
+      "value": "1731003156"
+    },
+    {
+      "key": "cuenta",
+      "value": "2200000045"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Con API key (deben responder bien)",
+      "item": [
+        {
+          "name": "Consultar cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{apikey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{kong}}/api/clientes/{{cedula}}",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{cedula}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar cuentas del cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{apikey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{kong}}/api/clientes/{{cedula}}/cuentas",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{cedula}}",
+                "cuentas"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Acreditar desembolso",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{apikey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{kong}}/api/desembolsos",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "desembolsos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": \"1.0\",\n  \"numeroPrestamo\": \"OP-PM-{{$timestamp}}\",\n  \"cedulaCliente\": \"{{cedula}}\",\n  \"cuentaDestino\": \"{{cuenta}}\",\n  \"montoAprobado\": 1000.0,\n  \"contribucionSolca\": 5.0,\n  \"montoNeto\": 995.0,\n  \"fechaDesembolso\": \"2026-10-31\",\n  \"referencia\": \"Prueba por Kong\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Debitar cuota",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{apikey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{kong}}/api/pasivos/debitos/solicitar",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "pasivos",
+                "debitos",
+                "solicitar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroOperacion\": \"OP-PM-{{$timestamp}}\",\n  \"identificacionCliente\": \"{{cedula}}\",\n  \"cuentaPrincipal\": \"{{cuenta}}\",\n  \"montoSolicitado\": 50.0,\n  \"permitirDebitoParcial\": true,\n  \"permitirBarridoMulticuenta\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Descargar archivo de recaudación",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{apikey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{kong}}/api/recaudaciones/archivo?fechaProceso=2026-10-31",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "recaudaciones",
+                "archivo"
+              ],
+              "query": [
+                {
+                  "key": "fechaProceso",
+                  "value": "2026-10-31"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Sin API key (Kong responde 401)",
+      "item": [
+        {
+          "name": "Consultar cuentas sin key",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{kong}}/api/clientes/{{cedula}}/cuentas",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{cedula}}",
+                "cuentas"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 401\", function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Debitar cuota sin key",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{kong}}/api/pasivos/debitos/solicitar",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "pasivos",
+                "debitos",
+                "solicitar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroOperacion\": \"OP-SIN-KEY\",\n  \"identificacionCliente\": \"{{cedula}}\",\n  \"cuentaPrincipal\": \"{{cuenta}}\",\n  \"montoSolicitado\": 50.0,\n  \"permitirDebitoParcial\": true,\n  \"permitirBarridoMulticuenta\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 401\", function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Key incorrecta (Kong responde 401)",
+      "item": [
+        {
+          "name": "Consultar cuentas con key falsa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "key-que-no-existe"
+              }
+            ],
+            "url": {
+              "raw": "{{kong}}/api/clientes/{{cedula}}/cuentas",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{cedula}}",
+                "cuentas"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 401\", function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Rutas no publicadas (Kong responde 404)",
+      "item": [
+        {
+          "name": "Movimientos de cuenta por Kong",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{apikey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{kong}}/api/cuentas/{{cuenta}}/movimientos",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "cuentas",
+                "{{cuenta}}",
+                "movimientos"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login por Kong",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{apikey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{kong}}/api/autenticacion/login",
+              "host": [
+                "{{kong}}"
+              ],
+              "path": [
+                "api",
+                "autenticacion",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identificacionCliente\": \"{{cedula}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. Comparación directa al backend (sin Kong)",
+      "item": [
+        {
+          "name": "Movimientos directo al 8081",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{backend}}/api/cuentas/{{cuenta}}/movimientos",
+              "host": [
+                "{{backend}}"
+              ],
+              "path": [
+                "api",
+                "cuentas",
+                "{{cuenta}}",
+                "movimientos"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
